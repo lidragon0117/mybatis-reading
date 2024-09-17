@@ -123,7 +123,9 @@ public class XPathParser {
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
+    // 对类属性进行赋值
     commonConstructor(validation, variables, entityResolver);
+    // xml文件流转文档
     this.document = createDocument(new InputSource(inputStream));
   }
 
@@ -217,7 +219,7 @@ public class XPathParser {
     }
     return new XNode(this, node, variables);
   }
-
+  // 主要是通过xpath 和decument 实现
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
@@ -228,15 +230,22 @@ public class XPathParser {
 
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
+    // 这里提供的是解析xml文件的格式，默认基本上都是这样
     try {
+      // 设置JDK 提供的文档解析工厂对象
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      // 设置是否验证
       factory.setValidating(validation);
-
+      // 设置是否命名空间
       factory.setNamespaceAware(false);
+      // 设置忽略注释
       factory.setIgnoringComments(true);
+      // 设置忽略注释空白
       factory.setIgnoringElementContentWhitespace(false);
+      // 是否转换成文本节点
       factory.setCoalescing(false);
+      // 设置是否展开实体引用节点，这里是SQL 片段引用
       factory.setExpandEntityReferences(true);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -265,8 +274,9 @@ public class XPathParser {
 
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
-    this.entityResolver = entityResolver;
+    this.entityResolver = entityResolver;// 就是创建的 new XMLMapperEntityResolver() 的对象
     this.variables = variables;
+    // xpath 主要是解析xml文件
     XPathFactory factory = XPathFactory.newInstance();
     this.xpath = factory.newXPath();
   }

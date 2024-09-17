@@ -62,6 +62,11 @@ public class SqlSessionFactoryBuilder {
     }
   }
 
+  /**
+   * 通过build方法进行构建工厂 SqlSessionFactory
+   * @param inputStream
+   * @return
+   */
   public SqlSessionFactory build(InputStream inputStream) {
     return build(inputStream, null, null);
   }
@@ -74,9 +79,18 @@ public class SqlSessionFactoryBuilder {
     return build(inputStream, null, properties);
   }
 
+  /**
+   * 重载方法
+   * @param inputStream
+   * @param environment
+   * @param properties
+   * @return
+   */
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
+      // 创建XMLConfigBuilder
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+
       return build(parser.parse());
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);

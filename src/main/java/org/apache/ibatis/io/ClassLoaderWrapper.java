@@ -24,17 +24,19 @@ import java.net.URL;
  * @author Clinton Begin
  */
 public class ClassLoaderWrapper {
+  /**
+   * 存在两个默认加载器 , 系统类加载器，或者叫app加载器
+   */
+    ClassLoader defaultClassLoader; //一般情况下位null
+    ClassLoader systemClassLoader; // 在下面构造器的时候会赋值
 
-  ClassLoader defaultClassLoader;
-  ClassLoader systemClassLoader;
-
-  ClassLoaderWrapper() {
-    try {
-      systemClassLoader = ClassLoader.getSystemClassLoader();
-    } catch (SecurityException ignored) {
-      // AccessControlException on Google App Engine
+    ClassLoaderWrapper() {
+      try {
+        systemClassLoader = ClassLoader.getSystemClassLoader();
+      } catch (SecurityException ignored) {
+        // AccessControlException on Google App Engine
+      }
     }
-  }
 
   /**
    * Get a resource as a URL using the current class path
@@ -129,15 +131,18 @@ public class ClassLoaderWrapper {
    *          - the classloaders to examine
    *
    * @return the resource or null
+   * 通过遍历类加载器获取对应的文件流
    */
   InputStream getResourceAsStream(String resource, ClassLoader[] classLoader) {
     for (ClassLoader cl : classLoader) {
       if (null != cl) {
 
         // try to find the resource as passed
+        // 通过名称获取文件流 获取文件流的方式是通过JDK自带ClassLoader 中的根据文件名称获取文件路径，在根据路径转成的Stream流
         InputStream returnValue = cl.getResourceAsStream(resource);
 
         // now, some class loaders want this leading "/", so we'll add it and try again if we didn't find the resource
+        //在不存在的情况下，再次尝试一下，即拼接一个 "/"再次尝试
         if (null == returnValue) {
           returnValue = cl.getResourceAsStream("/" + resource);
         }
@@ -228,8 +233,12 @@ public class ClassLoaderWrapper {
   }
 
   ClassLoader[] getClassLoaders(ClassLoader classLoader) {
-    return new ClassLoader[] { classLoader, defaultClassLoader, Thread.currentThread().getContextClassLoader(),
-        getClass().getClassLoader(), systemClassLoader };
+    return new ClassLoader[] {
+            classLoader, defaultClassLoader, // 默认类加载器
+            Thread.currentThread().getContextClassLoader(), // web 中可以使用，在java中也可以使用
+        getClass().getClassLoader(),
+            systemClassLoader // appClassLoader
+    };
   }
 
 }

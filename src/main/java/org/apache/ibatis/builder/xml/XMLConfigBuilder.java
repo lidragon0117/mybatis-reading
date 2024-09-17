@@ -82,7 +82,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   public XMLConfigBuilder(InputStream inputStream, String environment) {
     this(inputStream, environment, null);
   }
-
+  // 调用它的重载方法
   public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
     this(Configuration.class, inputStream, environment, props);
   }
@@ -103,6 +103,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public Configuration parse() {
+    // 默认是false
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
@@ -114,6 +115,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 设置
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfsImpl(settings);

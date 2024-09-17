@@ -26,7 +26,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Offline entity resolver for the MyBatis DTDs.
- *
+ *  MyBatis dtd的脱机实体解析器 在解析xml文件的时候，会通过网络获取 http://mybatis.org/dtd/mybatis-3-config.dtd的权限
+ *  但是在无网络，或者网络比较慢的情况下，可以采用本地  EntityResolver 接口是JDK考虑的，即JDK 提供了一个接口方法 resolveEntity
  * @author Clinton Begin
  * @author Eduardo Macarron
  */

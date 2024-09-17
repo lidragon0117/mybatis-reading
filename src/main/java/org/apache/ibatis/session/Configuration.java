@@ -99,6 +99,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
+ * Configuration 类中存在的属性在xml 文件中均能找到
  */
 public class Configuration {
 

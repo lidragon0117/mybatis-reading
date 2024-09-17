@@ -125,6 +125,7 @@ public class Resources {
    *
    * @throws java.io.IOException
    *           If the resource cannot be found or read
+   *   会调用重载方法 ，loader is null 但是这个resource 是指定的资源路径
    */
   public static InputStream getResourceAsStream(ClassLoader loader, String resource) throws IOException {
     InputStream in = classLoaderWrapper.getResourceAsStream(resource, loader);
@@ -318,6 +319,7 @@ public class Resources {
    * @throws ClassNotFoundException
    *           If the class cannot be found (duh!)
    */
+   // 根据class 名称获取对应的class
   public static Class<?> classForName(String className) throws ClassNotFoundException {
     return classLoaderWrapper.classForName(className);
   }

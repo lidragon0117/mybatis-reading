@@ -36,7 +36,7 @@ import org.apache.ibatis.io.Resources;
  * @author Clinton Begin
  */
 public class TypeAliasRegistry {
-
+  // 主要是存放在这里
   private final Map<String, Class<?>> typeAliases = new HashMap<>();
 
   public TypeAliasRegistry() {
@@ -155,11 +155,17 @@ public class TypeAliasRegistry {
     registerAlias(alias, type);
   }
 
+  /**
+   * 将key-value 放到大map 中
+   * @param alias
+   * @param value
+   */
   public void registerAlias(String alias, Class<?> value) {
     if (alias == null) {
       throw new TypeException("The parameter alias cannot be null");
     }
     // issue #748
+    // 将大写转成小写， 放到Map中的
     String key = alias.toLowerCase(Locale.ENGLISH);
     if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
       throw new TypeException(
