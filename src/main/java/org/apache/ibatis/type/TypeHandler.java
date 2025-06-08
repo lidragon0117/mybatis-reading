@@ -21,14 +21,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 设置参数类型转换
  * @author Clinton Begin
  */
 public interface TypeHandler<T> {
-
+  /**
+   * 将Java 类类型转成数据库类型
+   * @param ps
+   * @param i
+   * @param parameter
+   * @param jdbcType
+   * @throws SQLException
+   */
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
   /**
-   * Gets the result.
+   * 将结果转成Java对象类型
    *
    * @param rs
    *          the rs

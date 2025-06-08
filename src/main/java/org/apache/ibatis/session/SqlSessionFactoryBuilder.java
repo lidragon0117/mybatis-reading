@@ -106,6 +106,11 @@ public class SqlSessionFactoryBuilder {
     }
   }
 
+  /**
+   * 构建工厂对象
+   * @param config
+   * @return
+   */
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }

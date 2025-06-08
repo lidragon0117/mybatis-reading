@@ -117,6 +117,13 @@ public class XPathParser {
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
 
+  /**
+   * 解析文档构造器
+   * @param reader
+   * @param validation
+   * @param variables
+   * @param entityResolver
+   */
   public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(reader));
@@ -272,6 +279,12 @@ public class XPathParser {
     }
   }
 
+  /**
+   * 初始化对应的解析器
+   * @param validation
+   * @param variables
+   * @param entityResolver
+   */
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;// 就是创建的 new XMLMapperEntityResolver() 的对象

@@ -54,15 +54,23 @@ import org.apache.ibatis.util.MapUtil;
 public class Reflector {
 
   private static final MethodHandle isRecordMethodHandle = getIsRecordMethodHandle();
+  // 对应的Class 类型
   private final Class<?> type;
+  // 可读属性名字
   private final String[] readablePropertyNames;
+  // 可写属性的名字
   private final String[] writablePropertyNames;
+  // 保存setMethod 方法
   private final Map<String, Invoker> setMethods = new HashMap<>();
+  // 属性相应的getter方法
   private final Map<String, Invoker> getMethods = new HashMap<>();
+  // 记录了相应setter方法的参数类型，key是属性名称 value是setter方法的参数类型
   private final Map<String, Class<?>> setTypes = new HashMap<>();
+  // 记录了相应getter方法的参数类型，key是属性名称 value是setter方法的参数类型
   private final Map<String, Class<?>> getTypes = new HashMap<>();
+  // 默认构造器
   private Constructor<?> defaultConstructor;
-
+  //记录了所有属性名称的集合
   private final Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
@@ -70,17 +78,21 @@ public class Reflector {
     addDefaultConstructor(clazz);
     Method[] classMethods = getClassMethods(clazz);
     if (isRecord(type)) {
+      // 记录所有的属性方法
       addRecordGetMethods(classMethods);
     } else {
       addGetMethods(classMethods);
       addSetMethods(classMethods);
+      // 调整没有get set 方法的属性
       addFields(clazz);
     }
     readablePropertyNames = getMethods.keySet().toArray(new String[0]);
     writablePropertyNames = setMethods.keySet().toArray(new String[0]);
     for (String propName : readablePropertyNames) {
+      // 属性名称转大写 读
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
+    //写属性转大写
     for (String propName : writablePropertyNames) {
       caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
     }
@@ -91,8 +103,13 @@ public class Reflector {
         .forEach(m -> addGetMethod(m.getName(), m, false));
   }
 
+  /**
+   * 设置默认构造器,参数为0
+   * @param clazz
+   */
   private void addDefaultConstructor(Class<?> clazz) {
     Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+    // 遍历构造器，获取参数为0的构造器
     Arrays.stream(constructors).filter(constructor -> constructor.getParameterTypes().length == 0).findAny()
         .ifPresent(constructor -> this.defaultConstructor = constructor);
   }
@@ -288,6 +305,7 @@ public class Reflector {
   private Method[] getClassMethods(Class<?> clazz) {
     Map<String, Method> uniqueMethods = new HashMap<>();
     Class<?> currentClass = clazz;
+    // 当不为空且不为Object类
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
@@ -297,7 +315,7 @@ public class Reflector {
       for (Class<?> anInterface : interfaces) {
         addUniqueMethods(uniqueMethods, anInterface.getMethods());
       }
-
+      //获取父类
       currentClass = currentClass.getSuperclass();
     }
 

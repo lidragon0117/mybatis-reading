@@ -27,6 +27,7 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 针对复杂的对象，或者参数比如  User类中的对象
  * @author Clinton Begin
  */
 public class MetaClass {

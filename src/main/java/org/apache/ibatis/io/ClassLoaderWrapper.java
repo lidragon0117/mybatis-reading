@@ -236,7 +236,7 @@ public class ClassLoaderWrapper {
     return new ClassLoader[] {
             classLoader, defaultClassLoader, // 默认类加载器
             Thread.currentThread().getContextClassLoader(), // web 中可以使用，在java中也可以使用
-        getClass().getClassLoader(),
+            getClass().getClassLoader(),
             systemClassLoader // appClassLoader
     };
   }
